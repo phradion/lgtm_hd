@@ -2,6 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'lgtm_hd/version'
+require 'rubygems/dependency_installer.rb'
 
 Gem::Specification.new do |spec|
   spec.name          = "lgtm_hd"
@@ -31,4 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.6", ">= 3.6.0"
   spec.add_runtime_dependency "commander", "~> 4.4", ">= 4.4.3"
+  spec.add_runtime_dependency "clipboard", "~> 1.1", ">= 1.1.1"
+  spec.add_runtime_dependency "os", "~> 1.0", ">= 1.0.0"
 end
