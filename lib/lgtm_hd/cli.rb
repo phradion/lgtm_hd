@@ -28,7 +28,7 @@ module LgtmHD
           # TODO add validation for args
           uri = URI.parse(args[0])
           tmp_file_name = Time.now.strftime('%Y-%m-%d_%H-%M-%S') << LgtmHD::TEMP_FILE_PREFIX
-          
+
           Net::HTTP.start(uri.host, uri.port) do |http|
             resp = http.get(uri.path)
             file = Tempfile.new(tmp_file_name)
@@ -38,21 +38,21 @@ module LgtmHD
             file
           end
 
-          meme_writer = MemeWriter.new(*args)
-
+          meme_generator = MemeGenerator.new(*args)
+          meme_generator.draw
+          output = meme_generator.export
+          if OS.mac? then
+            `osascript -e 'set the clipboard to (read (POSIX file "#{output}") as JPEG picture)'`
+          end
           # Note on 2017/05/22
           # Currently Github allow pasting image directly to comment box.
           # However it does not support pure text content produced by pbcopy so we have to use direct Applescript
           # No Universal solution as for now.
           #
           # Apple Script reference: http://www.macosxautomation.com/applescript/imageevents/08.html
-          meme_writer.digest do |output|
-            if OS.mac? then
-              `osascript -e 'set the clipboard to (read (POSIX file "#{output}") as JPEG picture)'`
-            end
-          end
+          #meme_generator.digest do |output|
+          #end
 
-          meme_writer.drawMeme
         end
 
       end
