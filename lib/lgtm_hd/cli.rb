@@ -2,6 +2,9 @@ require 'rubygems'
 require 'commander'
 require 'os'
 require 'lgtm_hd'
+require 'net/http'
+require 'tempfile'
+require 'uri'
 
 module LgtmHD
   class CLI
@@ -22,6 +25,19 @@ module LgtmHD
         c.option '--clipboard', 'Copy the end result (LGTM image) to OS\'s clipboard'
 
         c.action do |args, options|
+          # TODO add validation for args
+          uri = URI.parse(args[0])
+          tmp_file_name = Time.now.strftime('%Y-%m-%d_%H-%M-%S') << LgtmHD::TEMP_FILE_PREFIX
+          
+          Net::HTTP.start(uri.host, uri.port) do |http|
+            resp = http.get(uri.path)
+            file = Tempfile.new(tmp_file_name)
+            file.binmode
+            file.write(resp.body)
+            file.flush
+            file
+          end
+
           meme_writer = MemeWriter.new(*args)
 
           # Note on 2017/05/22
@@ -35,6 +51,8 @@ module LgtmHD
               `osascript -e 'set the clipboard to (read (POSIX file "#{output}") as JPEG picture)'`
             end
           end
+
+          meme_writer.drawMeme
         end
 
       end
