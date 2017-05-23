@@ -1,6 +1,8 @@
 require "lgtm_hd/version"
 require "open-uri"
 require "clipboard"
+require "mini_magick"
+require "rubygems"
 
 module LgtmHD
   class MemeWriter
@@ -12,7 +14,21 @@ module LgtmHD
     end
 
     def drawMeme
-      
+      MiniMagick.configure do |config|
+        config.whiny = false
+      end
+      font_path = ROOT_DIR << FONT_PATH
+      img = MiniMagick::Image.open(@input_image_URI)
+      img.combine_options do |c|
+        c.gravity 'south center'
+        c.draw 'text 20,20 "LGTM"'
+        c.font font_path
+        c.pointsize 96
+        c.density 90
+        c.fill("#FFFFFF")
+      end
+      img.contrast
+      img.write(@output_image_URI)
     end
 
     def digest
