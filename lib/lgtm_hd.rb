@@ -4,17 +4,6 @@ require "clipboard"
 require "mini_magick"
 require "rubygems"
 
-module MiniMagick
-  class Image
-    def pixel_at(x, y)
-      run_command("convert", "#{path}[1x1+#{x.to_i}+#{y.to_i}]", 'txt:').split("\n").each do |line|
-        return $1 if /^0,0:.*(#[0-9a-fA-F]+)/.match(line)
-      end
-      nil
-    end
-  end
-end
-
 module LgtmHD
   class MemeGenerator
     attr_accessor :input_image_URI, :output_image_URI
