@@ -29,6 +29,7 @@ module LgtmHD
           uri = URI.parse(args[0])
           tmp_file_name = Time.now.strftime('%Y-%m-%d_%H-%M-%S') << LgtmHD::Configuration::TEMP_FILE_PREFIX
 
+          # TODO add file or URI independent stream 
           # Net::HTTP.start(uri.host, uri.port) do |http|
           #   resp = http.get(uri.path)
           #   file = Tempfile.new(tmp_file_name)
