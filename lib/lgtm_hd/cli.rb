@@ -35,14 +35,13 @@ module LgtmHD
           if args.length == 2 then
               source_uri = args[0]
               output_uri = args[1]
-              p output_uri
 
           elsif options.interactive  # Interactive mode!
             say "-- LGTM Interactive mode --"
             source_uri = ask('Source (URL or Path/to/file): ')
-            output_uri = ask('Output Folder: ')
+            output_uri = ask('Output Folder (absolute path): ')
+            # TODO accept relative path "~/.."
             to_clipboard = agree("Copy to clipboard afterward? [Y/N]")
-            p output_uri
           else
             raise "Too few or too many arguments provided. Need 2: source and output URIs."
           end
