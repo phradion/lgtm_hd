@@ -5,7 +5,6 @@ module LgtmHD
     DESCRIPTION       = "Generating images from user input with LGTM text on it, or fetching images from LGTM.in based on user's query. Finally put the image to clipboard."
 
     TEMP_FILE_PREFIX    = "lgtm_tmp_"
-    ROOT_DIR    = ROOT_DIR
 
     # Output Image configurations
     OUTPUT_MAX_WIDTH    = 500
