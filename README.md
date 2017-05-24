@@ -6,13 +6,14 @@
 This game is for LGTM lovers that want to generate cool shits without leaving their terminal.
 
 Check out the magic below
+
 Source             |  Kawaii!
 :-------------------------:|:-------------------------:
 ![](./images/example_1_before.gif?raw=true)  |  ![](./images/example_1_after.gif?raw=true)
 
 Source             |  Happy Taeyeon!
 :-------------------------:|:-------------------------:
-![](./images/example_2_before.jpg?raw=true)  |  ![](./images/example_2_after.jpg?raw=true)
+![](./images/example_2_before.png?raw=true)  |  ![](./images/example_2_after.jpg?raw=true)
 
 ## Installation
     $ gem install lgtm_hd
