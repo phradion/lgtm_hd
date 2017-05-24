@@ -23,12 +23,14 @@ Source             |  Happy Taeyeon!
 
 ## Usage
 
-    $ lgtm_hd [transform] <source_uri> <output_folder> [--clipboard] [--interactive]
+    $ lgtm_hd [transform] <source_uri> <output_folder> [--clipboard] [--interactive]
     $ lgtm_hd http://domain.com/image.jpg /path/lgtm.jpg 
-    
-    # --clipboard will let the OS copy content of the file for direct pasting to Github comment box
-    # --interactive is for lazy people who can\'t bother to type
-    # Default command is transform so you can just leave the command empty.
+
+
+    --clipboard will let the OS copy content of the file for direct pasting to Github comment box
+    --interactive is for lazy people who can\'t bother to type
+    Default command is transform so you can just leave the command empty.
+
 
 ## Features
 
