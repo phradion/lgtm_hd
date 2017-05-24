@@ -64,7 +64,7 @@ module LgtmHD
     end
 
     def captionFont
-      ROOT_DIR << Configuration::FONT_PATH
+      Configuration::ROOT_DIR << Configuration::FONT_PATH
     end
 
     def captionFontSize

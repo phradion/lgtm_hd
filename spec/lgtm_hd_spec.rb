@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe LgtmHd do
+describe LgtmHD do
   it 'has a version number' do
-    expect(LgtmHd::VERSION).not_to be nil
+    expect(LgtmHD::VERSION).not_to be nil
   end
 
   it 'does something useful' do
