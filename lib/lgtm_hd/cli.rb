@@ -1,11 +1,14 @@
 require 'rubygems'
 require 'commander'
 require 'os'
-require 'lgtm_hd'
 require 'net/http'
 require 'tempfile'
 require 'clipboard'
 require 'uri'
+
+require 'lgtm_hd'
+require 'lgtm_hd/version'
+require 'lgtm_hd/configuration'
 
 module LgtmHD
   class CLI
