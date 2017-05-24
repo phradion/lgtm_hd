@@ -11,9 +11,9 @@ module LgtmHD
     include Commander::Methods
 
     def run
-      program :name, LgtmHD::PROGRAMNAME
+      program :name, LgtmHD::Configuration::PROGRAM_NAME
       program :version, LgtmHD::VERSION
-      program :description, LgtmHD::DESCRIPTION
+      program :description, LgtmHD::Configuration::DESCRIPTION
       default_command :export
 
       command :export do |c|
@@ -27,23 +27,25 @@ module LgtmHD
         c.action do |args, options|
           # TODO add validation for args
           uri = URI.parse(args[0])
-          tmp_file_name = Time.now.strftime('%Y-%m-%d_%H-%M-%S') << LgtmHD::TEMP_FILE_PREFIX
+          tmp_file_name = Time.now.strftime('%Y-%m-%d_%H-%M-%S') << LgtmHD::Configuration::TEMP_FILE_PREFIX
 
-          Net::HTTP.start(uri.host, uri.port) do |http|
-            resp = http.get(uri.path)
-            file = Tempfile.new(tmp_file_name)
-            file.binmode
-            file.write(resp.body)
-            file.flush
-            file
-          end
+          # Net::HTTP.start(uri.host, uri.port) do |http|
+          #   resp = http.get(uri.path)
+          #   file = Tempfile.new(tmp_file_name)
+          #   file.binmode
+          #   file.write(resp.body)
+          #   file.flush
+          #   file
+          # end
 
           meme_generator = MemeGenerator.new(*args)
           meme_generator.draw
-          output = meme_generator.export
-          if OS.mac? then
-            `osascript -e 'set the clipboard to (read (POSIX file "#{output}") as JPEG picture)'`
+          meme_generator.export do |output|
+            if OS.mac? then
+              `osascript -e 'set the clipboard to (read (POSIX file "#{output}") as JPEG picture)'`
+            end
           end
+
           # Note on 2017/05/22
           # Currently Github allow pasting image directly to comment box.
           # However it does not support pure text content produced by pbcopy so we have to use direct Applescript
