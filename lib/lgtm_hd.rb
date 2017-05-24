@@ -8,6 +8,7 @@ module LgtmHD
     attr_accessor :input_image_URI, :output_image_URI
 
     # TODO make options list for this class
+    # TODO pass BLOB data into this class instead of paths
     def initialize(input_image_URI, output_image_URI)
       @input_image_URI = input_image_URI
       @output_image_URI = output_image_URI
