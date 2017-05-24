@@ -18,7 +18,7 @@ module LgtmHD
       program :name, LgtmHD::Configuration::PROGRAM_NAME
       program :version, LgtmHD::VERSION
       program :description, LgtmHD::Configuration::DESCRIPTION
-      default_command :export
+      default_command :transform
 
       command :transform do |c|
         c.syntax = 'lgtm_hd transform <source_uri> <output_uri> [options]'

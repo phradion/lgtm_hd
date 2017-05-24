@@ -65,7 +65,7 @@ module LgtmHD
     end
 
     def captionFont
-      '' << ROOT_DIR << Configuration::FONT_PATH
+      '' << LgtmHD.root << Configuration::FONT_PATH
     end
 
     def captionFontSize
@@ -116,4 +116,8 @@ module LgtmHD
     end
 
   end # End of Class
+
+  def self.root
+    File.expand_path '../..', __FILE__
+  end
 end # End of Module
