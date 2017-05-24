@@ -28,8 +28,9 @@ Source             |  Happy Taeyeon!
 * Caption Position - Top Center or Bottom Center positions for the caption
 * Auto Clipboard - MacOSX user can just paste directly to comment box on Github after running the programm. On other OSes the clipboard only returns the path to the generated LGTM image.
 * Formats - GIF, PNG, JPEG (SVG and TIFF not tested yet)
-
+* Max Image size is 500px by 500px
 ## TODO List
+* Add options for [font size, positions] (Code already setup for this, expect new version soon!)
 * Add --source-random option incase there is no source provided.
 * Add --caption-color for more colorful captions
 * Integrate with lgtm.in or google images
