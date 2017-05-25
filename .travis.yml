@@ -2,3 +2,9 @@ language: ruby
 rvm:
   - 2.2.3
 before_install: gem install bundler -v 1.10.6
+addons:
+  code_climate:
+    repo_token: f8de4766221c1d212d7c884d1415314f1c55a24c1a58e16db530efbf155d1ad3
+# regular test configuration
+after_success:
+  - bundle exec codeclimate-test-reporter
