@@ -62,7 +62,7 @@ module LgtmHD
 
           # Do stuff with our LGTM meme
           say "- Reading and inspecting source"
-          meme_generator = MemeGenerator.new(source_uri, output_uri)
+          meme_generator = MemeGenerator.new(input_image_uri:source_uri, output_image_uri:output_uri)
           say "- Rendering output"
           meme_generator.draw
 

@@ -9,9 +9,9 @@ module LgtmHD
 
     # TODO make options list for this class
     # TODO pass BLOB data into this class instead of paths
-    def initialize(input_image_URI, output_image_URI)
-      @input_image_URI = input_image_URI
-      @output_image_URI = output_image_URI
+    def initialize(input_image_uri:, output_image_uri:)
+      @input_image_URI = input_image_uri:
+      @output_image_URI = output_image_uri:
 
       @img = MiniMagick::Image.open(@input_image_URI)
       @caption_position = :caption_position_bottom
@@ -25,7 +25,7 @@ module LgtmHD
     # @return [MiniMagick::Image] The drawn image
     #
     def draw (caption_text = "LGTM")
-      if @img.respond_to? (:combine_options) then
+      if @img.respond_to? (:combine_options)
         @img.combine_options do |c|
           c.gravity captionPosition()
           c.draw "text 0,0 " << "#{caption_text}"
