@@ -29,7 +29,7 @@ module LgtmHD
         c.font captionFont
         c.pointsize captionFontSize
         c.density imageDensity
-        c.fill captionColor
+        c.fill caption_color
         c.resize imageMaxSize().reduce() {|w,h| "#{w}x#{h}"} # syntax: convert -resize $wx$h
         img.contrast
       end
@@ -73,7 +73,7 @@ module LgtmHD
       Configuration::CAPTION_FONT_SIZE_DEFAULT
     end
 
-    def imageDensity
+    def image_density
       Configuration::OUTPUT_DENSITY
     end
 
@@ -94,8 +94,10 @@ module LgtmHD
     #
     # @return [String] the foreground color of caption
     #
-    def captionColor
+    def caption_color
       # Copy current image data instead of working directly on working file
+      # because ImageMagick apply change directly to the temporary working file instead of keep changes in memory
+      # Might need to invest a bit further to ensure this, as for now, lazy..
       temp_img = MiniMagick::Image.read(image.to_blob)
 
       # cutoff's x is always 0 as we only support top or bottom right now
