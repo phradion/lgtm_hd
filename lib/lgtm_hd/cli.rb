@@ -41,7 +41,7 @@ module LgtmHD
             # TODO accept relative path "~/.."
             to_clipboard = agree("Copy to clipboard afterward? [Y/N]")
           else
-            raise "Too few or too many arguments provided. Need 2: source and output URIs."
+            raise ArgumentError, "Too few or too many arguments provided. Need 2: source and output URIs."
           end
 
 
