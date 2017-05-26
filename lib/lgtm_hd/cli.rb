@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'commander'
 require 'os'
 require 'clipboard'
@@ -14,7 +15,7 @@ module LgtmHD
       default_command :transform
 
       command :transform do |c|
-        c.syntax = 'lgtm_hd transform <source_uri> <output_uri> [options]'
+        c.syntax = 'lgtm_hd <source_uri> <output_path> [--clipboard] [--interactive]'
         c.summary = 'Generate a LGTM image from source_uri (local path or URL) into output folder'
         c.description = ''
         c.example '', 'lgtm_hd export http://domain.com/image.png /path/to/lgtm.png'
@@ -31,24 +32,29 @@ module LgtmHD
           elsif options.interactive  # Interactive mode!
             say "-- LGTM Interactive mode --"
             source_uri = ask('Source (URL or Path/to/file): ')
-            output_uri = ask('Output Folder (absolute path): ')
+            output_uri = ask('Output Folder: ')
             # TODO accept relative path "~/.."
             to_clipboard = agree("Copy to clipboard afterward? [Y/N]")
           else
-            raise ArgumentError, "Too few or too many arguments provided. Need 2: source and output URIs."
+            say "usage: lgtm_hd <source_uri> <output_path> [--clipboard] [--interactive]"
+            raise ArgumentError, "Too few or too many arguments provided, need 2: source and output URIs"
           end
 
 
           # Validate the inputs
+          output_folder = File.expand_path(output_uri)
+          output_file = File.join(output_folder,
+                                  LgtmHD::Configuration::OUTPUT_PREFIX +
+                                  Time.now.strftime('%Y-%m-%d_%H-%M-%S') +
+                                  File.extname(source_uri))
           raise "Source is not proper URIs (URL or Path/to/file)" unless source_uri =~ URI::regexp || File.exist?(source_uri)
-          raise "Output is not a directory or valid path" unless File.exist?(output_uri) && File.directory?(output_uri)
+          raise "Output is invalid path or directory" unless File.exist?(output_folder) && File.directory?(output_folder)
 
-          file_ext = File.extname(source_uri)
-          output_uri = File.join(output_uri, LgtmHD::Configuration::OUTPUT_PREFIX + Time.now.strftime('%Y-%m-%d_%H-%M-%S') + file_ext)
+
 
           # Do stuff with our LGTM meme
           say "- Reading and inspecting source"
-          meme_generator = MemeGenerator.new(input_image_uri:source_uri, output_image_uri:output_uri)
+          meme_generator = MemeGenerator.new(input_image_uri:source_uri, output_image_uri:output_file)
           say "- Rendering output"
           meme_generator.draw
 

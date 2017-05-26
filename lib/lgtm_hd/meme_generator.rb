@@ -1,3 +1,5 @@
+require "mini_magick"
+
 module LgtmHD
   class MemeGenerator
 
@@ -19,7 +21,7 @@ module LgtmHD
       img = image
       img.combine_options do |c|
         c.gravity caption_position
-        c.draw "text 0,0 " << "#{caption_text}"
+        c.draw "text 0,0 " << caption_text
         c.font caption_font
         c.pointsize caption_font_size
         c.density image_density

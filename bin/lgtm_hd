@@ -1,4 +1,3 @@
 #!/usr/bin/env ruby
 require "lgtm_hd"
-
-LgtmHD::CLI.new.run #if $0 == __FILE__
+LgtmHD::CLI.new.run
