@@ -3,10 +3,6 @@ require 'os'
 require 'clipboard'
 require 'uri'
 
-require 'lgtm_hd'
-require 'lgtm_hd/version'
-require 'lgtm_hd/configuration'
-
 module LgtmHD
   class CLI
     include Commander::Methods
@@ -48,7 +44,7 @@ module LgtmHD
           raise "Output is not a directory or valid path" unless File.exist?(output_uri) && File.directory?(output_uri)
 
           file_ext = File.extname(source_uri)
-          output_uri = File.join(output_uri, "" << LgtmHD::Configuration::OUTPUT_PREFIX << Time.now.strftime('%Y-%m-%d_%H-%M-%S') << file_ext)
+          output_uri = File.join(output_uri, LgtmHD::Configuration::OUTPUT_PREFIX + Time.now.strftime('%Y-%m-%d_%H-%M-%S') + file_ext)
 
           # Do stuff with our LGTM meme
           say "- Reading and inspecting source"
