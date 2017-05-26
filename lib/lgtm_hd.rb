@@ -23,16 +23,14 @@ module LgtmHD
     #
     def draw (caption_text = "LGTM")
       img = image
-      if img.respond_to? (:combine_options)
-        img.combine_options do |c|
-          c.gravity captionPosition
-          c.draw "text 0,0 " << "#{caption_text}"
-          c.font captionFont
-          c.pointsize captionFontSize
-          c.density imageDensity
-          c.fill captionColor
-          c.resize imageMaxSize().reduce() {|w,h| "#{w}x#{h}"} # syntax: convert -resize $wx$h
-        end
+      img.combine_options do |c|
+        c.gravity captionPosition
+        c.draw "text 0,0 " << "#{caption_text}"
+        c.font captionFont
+        c.pointsize captionFontSize
+        c.density imageDensity
+        c.fill captionColor
+        c.resize imageMaxSize().reduce() {|w,h| "#{w}x#{h}"} # syntax: convert -resize $wx$h
         img.contrast
       end
       yield img if block_given?
@@ -59,7 +57,7 @@ module LgtmHD
     # Could be either :caption_position_top or :caption_position_bottom
     # Default value is top
     #
-    def captionPosition ()
+    def captionPosition
       if not [:caption_position_top, :caption_position_bottom].include? (@caption_position)
         @caption_position = :caption_position_bottom
       end
@@ -115,7 +113,7 @@ module LgtmHD
       magic_color_value += color['b'] * color['b'] * 0.068
       magic_color_value = Math.sqrt(magic_color_value)
 
-      return (magic_color_value.round > 130) ? "#000000" : "#FFFFFF"
+      (magic_color_value.round > 130) ? "#000000" : "#FFFFFF"
     end
 
   end # End of Class
