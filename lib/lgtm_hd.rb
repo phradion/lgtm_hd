@@ -5,16 +5,13 @@ require "rubygems"
 module LgtmHD
 
   class MemeGenerator
-    attr_accessor :input_image_URI, :output_image_URI
+    attr_accessor :input_image_uri, :output_image_uri
 
     # TODO make options list for this class
     # TODO pass BLOB data into this class instead of paths
     def initialize(input_image_uri:, output_image_uri:)
-      @input_image_URI = input_image_uri:
-      @output_image_URI = output_image_uri:
-
-      @img = MiniMagick::Image.open(@input_image_URI)
-      @caption_position = :caption_position_bottom
+      @input_image_uri = input_image_uri
+      @output_image_uri = output_image_uri
     end
 
     ##
@@ -25,9 +22,10 @@ module LgtmHD
     # @return [MiniMagick::Image] The drawn image
     #
     def draw (caption_text = "LGTM")
-      if @img.respond_to? (:combine_options)
-        @img.combine_options do |c|
-          c.gravity captionPosition()
+      img = image
+      if img.respond_to? (:combine_options)
+        img.combine_options do |c|
+          c.gravity captionPosition
           c.draw "text 0,0 " << "#{caption_text}"
           c.font captionFont
           c.pointsize captionFontSize
@@ -35,18 +33,22 @@ module LgtmHD
           c.fill captionColor
           c.resize imageMaxSize().reduce() {|w,h| w << 'x' << h} # syntax: convert -resize $wx$h
         end
-        @img.contrast
+        img.contrast
       end
-      yield @img if block_given?
+      yield @image = img if block_given?
     end
 
     def export
-      @img.write(@output_image_URI)
-      yield @output_image_URI if block_given?
+      image.write(@output_image_uri)
+      yield @output_image_uri if block_given?
     end
 
 
   private
+
+    def image
+      @image ||= MiniMagick::Image.open(@input_image_uri)
+    end
 
     def imageMaxSize
       [Configuration::OUTPUT_MAX_WIDTH.to_s, Configuration::OUTPUT_MAX_HEIGHT.to_s]
@@ -55,10 +57,11 @@ module LgtmHD
     ##
     # @return [String] the position of image
     # Could be either :caption_position_top or :caption_position_bottom
+    # Default value is top
     #
     def captionPosition ()
       if not [:caption_position_top, :caption_position_bottom].include? (@caption_position)
-        @caption_position = :caption_position_top
+        @caption_position = :caption_position_bottom
       end
       return {:caption_position_top => "north center",
               :caption_position_bottom => "south center"}[@caption_position]
@@ -95,15 +98,15 @@ module LgtmHD
     #
     def captionColor
       # Copy current image data instead of working directly on working file
-      img = MiniMagick::Image.read(@img.to_blob)
+      temp_img = MiniMagick::Image.read(image.to_blob)
 
       # cutoff's x is always 0 as we only support top or bottom right now
-      cutoff_y = @caption_position == :caption_position_bottom ? (img.height/2).round : 0
-      img.crop("#{img.width}x#{img.height/2}+0+#{cutoff_y}")
+      cutoff_y = @caption_position == :caption_position_bottom ? (temp_img.height/2).round : 0
+      temp_img.crop("#{temp_img.width}x#{temp_img.height/2}+0+#{cutoff_y}")
 
       # Since we are getting
-      img = img.resize('1x1')
-      rgb = img.get_pixels[0][0] # Only 1x1 pixel remember? ^_^
+      temp_img = temp_img.resize('1x1')
+      rgb = temp_img.get_pixels[0][0] # Only 1x1 pixel remember? ^_^
       color = {}
       ['r','g','b'].zip(rgb) { |k,v| color[k] = v }
 

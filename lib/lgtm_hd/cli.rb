@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'commander'
 require 'os'
 require 'net/http'
@@ -32,10 +31,9 @@ module LgtmHD
           to_clipboard = options.clipboard
 
           # ARGS validation!
-          if args.length == 2 then
+          if args.length == 2
               source_uri = args[0]
               output_uri = args[1]
-
           elsif options.interactive  # Interactive mode!
             say "-- LGTM Interactive mode --"
             source_uri = ask('Source (URL or Path/to/file): ')
