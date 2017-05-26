@@ -31,11 +31,11 @@ module LgtmHD
           c.pointsize captionFontSize
           c.density imageDensity
           c.fill captionColor
-          c.resize imageMaxSize().reduce() {|w,h| w << 'x' << h} # syntax: convert -resize $wx$h
+          c.resize imageMaxSize().reduce() {|w,h| "#{w}x#{h}"} # syntax: convert -resize $wx$h
         end
         img.contrast
       end
-      yield @image = img if block_given?
+      yield img if block_given?
     end
 
     def export
@@ -51,7 +51,7 @@ module LgtmHD
     end
 
     def imageMaxSize
-      [Configuration::OUTPUT_MAX_WIDTH.to_s, Configuration::OUTPUT_MAX_HEIGHT.to_s]
+      [Configuration::OUTPUT_MAX_WIDTH, Configuration::OUTPUT_MAX_HEIGHT]
     end
 
     ##
@@ -68,7 +68,7 @@ module LgtmHD
     end
 
     def captionFont
-      '' << LgtmHD.root << Configuration::FONT_PATH
+      File.join(LgtmHD.root, Configuration::FONT_PATH)
     end
 
     def captionFontSize

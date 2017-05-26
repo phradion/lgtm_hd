@@ -44,14 +44,8 @@ module LgtmHD
 
 
           # Validate the inputs
-          unless (source_uri =~ URI::regexp or File.exist?(source_uri)) then
-            # Part of the reason why I fucking hate #unless. No reason.
-            raise "Source is not proper URIs (URL or Path/to/file)"
-          end
-
-          unless File.exist?(output_uri) and File.directory?(output_uri) then
-            raise "Output is not a directory or valid path"
-          end
+          raise "Source is not proper URIs (URL or Path/to/file)" unless source_uri =~ URI::regexp || File.exist?(source_uri)
+          raise "Output is not a directory or valid path" unless File.exist?(output_uri) && File.directory?(output_uri)
 
           file_ext = File.extname(source_uri)
           output_uri = File.join(output_uri, "" << LgtmHD::Configuration::OUTPUT_PREFIX << Time.now.strftime('%Y-%m-%d_%H-%M-%S') << file_ext)
