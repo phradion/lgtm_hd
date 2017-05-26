@@ -1,7 +1,5 @@
 require 'commander'
 require 'os'
-require 'net/http'
-require 'tempfile'
 require 'clipboard'
 require 'uri'
 
