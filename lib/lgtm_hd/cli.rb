@@ -33,7 +33,6 @@ module LgtmHD
             say "-- LGTM Interactive mode --"
             source_uri = ask('Source (URL or Path/to/file): ')
             output_uri = ask('Output Folder: ')
-            # TODO accept relative path "~/.."
             to_clipboard = agree("Copy to clipboard afterward? [Y/N]")
           else
             say "usage: lgtm_hd <source_uri> <output_path> [--clipboard] [--interactive]"
