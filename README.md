@@ -23,14 +23,29 @@ Source             |  Happy Taeyeon!
 
 ## Usage
 
-    $ lgtm_hd [transform] <source_uri> <output_folder> [--clipboard] [--interactive]
-    $ lgtm_hd http://domain.com/image.jpg /path/lgtm.jpg 
+    $ lgtm_hd <source_image_uri>
+    $ lgtm_hd random 
 
-
-    --clipboard will let the OS copy content of the file for direct pasting to Github comment box
-    --interactive is for lazy people who can\'t bother to type
+    Options:
+    --clipboard (or -c) will let the OS copy content of the file for direct pasting to Github comment box
+    --interactive (or -i) is for lazy people who can't bother to type
+    --dest DIR (or -d) is for changing output folder
     Default command is transform so you can just leave the command empty.
+    
+## Examples
 
+    $ lgtm_hd transform http://nogitweet.com/wp-content/uploads/2015/03/fbf5c1c80ffea521bad6e231061731a5.gif
+    \ Reading and inspecting source at http://nogitweet.com/wp-content/uploads/2015/03/fbf5c1c80ffea521bad6e231061731a5.gif
+    \ Processing Image
+    \ Exporting to file
+    \ Exported LGTM image to /Users/huydq/Desktop/lgtm_hd_20170527124831.gif.
+    
+    $ lgtm_hd random -c -d /tmp/
+    \ Fetching random image from lgtm.in
+    \ Loading image at http://i.imgur.com/mHrrwpY.gif
+    \ Exported image to /tmp/lgtm_hd_20170527124027.gif
+    \ Copied file to OS's clipboard for direct pasting to Github comments or Slack
+    \ Or you can copy the markdown format by lgtm.in directly below
 
 ## Features
 
