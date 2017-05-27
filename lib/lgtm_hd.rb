@@ -1,5 +1,6 @@
 require "lgtm_hd/version"
 require "lgtm_hd/configuration"
 require "lgtm_hd/utilities"
+require "lgtm_hd/lgtmdotin"
 require "lgtm_hd/meme_generator"
 require "lgtm_hd/cli"

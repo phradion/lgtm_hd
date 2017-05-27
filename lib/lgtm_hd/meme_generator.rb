@@ -2,7 +2,8 @@ require "mini_magick"
 
 module LgtmHD
   class MemeGenerator
-
+    @@caption_positions = {caption_position_top: "north center", caption_position_bottom: "south center"}
+    
     # TODO make options list for this class
     # TODO pass BLOB data into this class instead of paths
     def initialize(input_image_uri:, output_image_uri:)
@@ -54,11 +55,8 @@ module LgtmHD
     # Default value is top
     #
     def caption_position
-      if not [:caption_position_top, :caption_position_bottom].include? (@caption_position)
-        @caption_position = :caption_position_bottom
-      end
-      return {:caption_position_top => "north center",
-              :caption_position_bottom => "south center"}[@caption_position]
+      @caption_position = :caption_position_bottom unless [:caption_position_top, :caption_position_bottom].include? @caption_position
+      @@caption_positions[@caption_position]
     end
 
     def caption_font

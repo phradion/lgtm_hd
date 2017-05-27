@@ -11,8 +11,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Huy Dinh"]
   spec.email         = ["phradion@gmail.com"]
 
-  spec.summary       = %q{Generating LGTM image to clipboard.}
-  spec.description   = %q{Generating images from user input with LGTM text on it, or fetching images from LGTM.in based on user's query. Finally put the image to clipboard.}
+  spec.summary       = %q{Generate LGTM image from a source image and copy to clipboard.}
+  spec.description   = %q{Generate LGTM image from URL or file with smart text colors and positions. Support direct clipboard paste to github's comment box or Slack on MacOSX.}
   spec.homepage      = "http://github.com/phradion/lgtm_hd"
   spec.license       = "MIT"
 
@@ -34,7 +34,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "3.6.0"
   spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "pry"
   spec.add_development_dependency "codeclimate-test-reporter", "~> 1.0.0"
+  spec.add_runtime_dependency "open_uri_redirections"
   spec.add_runtime_dependency "commander", "4.4.3"
   spec.add_runtime_dependency "clipboard", "1.1.1"
   spec.add_runtime_dependency "os", "1.0.0"

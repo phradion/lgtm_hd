@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'net/http'
+
 module LgtmHD
   def self.gem_root
     File.expand_path '../../..', __FILE__
