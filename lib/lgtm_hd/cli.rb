@@ -122,7 +122,7 @@ module LgtmHD
 
     def self.format_destination_dir(dest_dir)
       return Dir.pwd if dest_dir == '.'
-      dest_dir ||= LgtmHD::Configuration::OUTPUT_PATH_DEFAULT
+      dest_dir || LgtmHD::Configuration::OUTPUT_PATH_DEFAULT
     end
     def self.format_destination_file_prefix
       LgtmHD::Configuration::OUTPUT_PREFIX + Time.now.strftime('%Y%m%d%H%M%S')
