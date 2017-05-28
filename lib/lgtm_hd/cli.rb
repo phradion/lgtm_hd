@@ -20,7 +20,8 @@ module LgtmHD
 
       global_option '-c', '--clipboard', 'Copy the end result (LGTM image) to OS\'s clipboard for direct pasting to other programs'
       global_option '-i', '--interactive', 'Turn on interactive Mode. In case you forgot all these super complexive args and options' do say "-- LGTM HD Interactive Mode --" end
-      global_option '-d', '--dest DIR', String, 'Directory to export the LGTM image to'
+      global_option '-d', '--dest DIR', String, 'Directory to export the LGTM image to \
+                                                 Using .(dot) if you wanna export to current directory'
 
       command :random do |c|
         c.syntax = 'lgtm_hd random [--clipboard -c] [--interactive -i] [--dest DIR | -d DIR]'.freeze
@@ -120,8 +121,8 @@ module LgtmHD
     end
 
     def self.format_destination_dir(dest_dir)
-      dest_dir ||= LgtmHD::Configuration::OUTPUT_PATH_DEFAULT
-      File.expand_path(dest_dir)
+      return Dir.pwd if dest_dir == '.'
+      dest_dir || LgtmHD::Configuration::OUTPUT_PATH_DEFAULT
     end
     def self.format_destination_file_prefix
       LgtmHD::Configuration::OUTPUT_PREFIX + Time.now.strftime('%Y%m%d%H%M%S')
