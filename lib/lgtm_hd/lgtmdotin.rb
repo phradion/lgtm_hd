@@ -15,7 +15,7 @@ module LgtmHD
       begin
         json_data = fetch_meta_data
         image_url = json_data["actualImageUrl"]
-        image_markdown = json_data["markdown"]
+        image_markdown = json_data["markdown"].lines.first.strip
         yield image_url, image_markdown
 
         # fetching image data
