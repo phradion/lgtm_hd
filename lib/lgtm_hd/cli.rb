@@ -1,9 +1,8 @@
 require 'rubygems'
 require 'commander'
+require 'rainbow'
 require 'os'
 require 'clipboard'
-require 'net/http'
-require 'open-uri'
 require 'uri'
 require 'pry'
 
@@ -11,87 +10,94 @@ module LgtmHD
   class CLI
     include Commander::Methods
 
+    CMD_RANDOM_SYNTAX = 'lgtm_hd random [-i | --interactive] [-d | --dest DIR]'.freeze
+    CMD_TRANSFORM_SYNTAX = 'lgtm_hd <URI|FILE> [-c | --clipboard] [-i | --interactive] [-d | --dest <DIR>]'.freeze
+
     def run
       program :name, LgtmHD::Configuration::PROGRAM_NAME
       program :version, LgtmHD::VERSION
       program :description, LgtmHD::Configuration::DESCRIPTION
 
       default_command :transform
-
-      global_option '-c', '--clipboard', 'Copy the end result (LGTM image) to OS\'s clipboard for direct pasting to other programs'
       global_option '-i', '--interactive', 'Turn on interactive Mode. In case you forgot all these super complexive args and options' do say "-- LGTM HD Interactive Mode --" end
-      global_option '-d', '--dest DIR', String, 'Directory to export the LGTM image to \
-                                                 Using .(dot) if you wanna export to current directory'
+      global_option '-d', '--dest DIR', String, 'Directory to export the LGTM image to. Default value is user\'s current working directory'
+
 
       command :random do |c|
-        c.syntax = 'lgtm_hd random [--clipboard -c] [--interactive -i] [--dest DIR | -d DIR]'.freeze
-        c.summary = 'Fetch random images from LGTM.in'.freeze
+        c.syntax = CMD_RANDOM_SYNTAX
+        c.summary = 'Fetch random images from LGTM.in'
         c.description = ''
-        c.example 'Example', 'lgtm_hd random -c'
+        c.example 'Example', 'lgtm_hd random'
 
         c.action do |args, options|
           if options.interactive  # Interactive mode!
-            options.dest = ask('[?] Destination Directory: ')
-            options.clipboard ||= agree("[?] Copy LGTM image to clipboard afterward? [Y/N]")
+            options.dest ||= ask(CLI.format_question('\\ Destination Directory (Enter to skip): '))
           end
-          dest_dir = CLI.format_destination_dir(options.dest)
-          dest_file_prefix = CLI.format_destination_file_prefix
+          dest_dir = CLI.destination_dir(options.dest)
+          dest_file_prefix = CLI.destination_file_prefix
+          CLI.check_uris(dest_dir)
+
           say "\\ Fetching random image from lgtm.in"
           dest_uri,image_markdown = LgtmDotIn.fetch_random_image(dest_dir,dest_file_prefix) do |url, markdown|
             say "\\ Loading image at #{url}"
           end
 
           say "\\ Exported image to #{dest_uri}"
-          if options.clipboard
-             copy_file_to_clipboard(dest_uri)
-             say "\\ Or you can copy the markdown format by lgtm.in directly below\n\n#{image_markdown}"
-          end
+          copy_file_to_clipboard(dest_uri)
+          say "\\ Or you can copy the markdown format below provided by lgtm.in\n\n\e[3m#{image_markdown}\e[0m\n"
+          say "\\ Note: if image does not have LGTM texts on it (happens sometimes on lgtm.in)\nplease run: lgtm_hd #{dest_uri}"
         end
       end
 
       command :transform do |c|
-        c.syntax = 'lgtm_hd <image_URI> [--clipboard|-c] [--interactive|-i] [--dest DIR|-d DIR]'.freeze
-        c.summary = 'Generate LGTM text on top of image URL or local image File'.freeze
-        c.description = ''
-        c.example 'Example', 'lgtm_hd transform http://domain.com/image.png -i -c'
+        c.syntax = CMD_TRANSFORM_SYNTAX
+        c.summary = 'Generate LGTM text on top of image URL or local image File'
+        c.description = 'The command \e[3mtransform\e[0m is the default command hence you can skip typing it instead'
+        c.example 'Example', 'lgtm_hd http://domain.com/image.png'
 
         c.action do |args, options|
           # ARGS validation!
           if args.length >= 1
-              source_uri = args[0]
+            source_uri = args[0]
           elsif options.interactive  # Interactive mode!
-            source_uri = ask('Source Image (URL or Path/to/file): ')
-            options.dest = ask('Destination Directory: ')
-            options.clipboard ||= agree("Copy exported image to clipboard afterward? [Y/N]")
+            source_uri ||= ask(CLI.format_question('\\ Source Image (URL or Path/to/file): '))
+            options.dest ||= ask(CLI.format_question('\\ Destination Directory (Enter to skip): '))
           else
-            say "usage: lgtm_hd <source_img_URI> [--clipboard | -c] [--interactive | -i] [--dest DIR | -d DIR]"
-            raise ArgumentError, "Need to provide <source_image_URI>"
+            # Since this is the default command so we will provide a little extra care for first-time user
+            CLI.help_the_noobie
           end
 
+
+
           # Validate the inputs
-          dest_dir = CLI.format_destination_dir(options.dest)
+          dest_dir = CLI.destination_dir(options.dest)
           CLI.check_uris(dest_dir, source_uri)
-          dest_file = File.join(dest_dir, CLI.format_destination_file_prefix + File.extname(source_uri))
+          dest_file = File.join(dest_dir, CLI.destination_file_prefix + File.extname(source_uri))
 
           # Do stuff with our LGTM meme
           say "\\ Reading and inspecting source at #{source_uri}"
           meme_generator = MemeGenerator.new(input_image_uri:source_uri, output_image_uri:dest_file)
-          say "\\ Processing Image"
+          say "\\ Transforming Image"
           meme_generator.draw
 
           # Export and play around with the clipboard
           say "\\ Exporting to file"
           meme_generator.export do |output|
             say "\\ Exported LGTM image to #{output}."
-            if options.clipboard then
-              CLI.copy_file_to_clipboard(dest_file)
-            end # end of if to_clipboard
+            copy_file_to_clipboard(dest_file)
           end # end of meme_generator.export block
         end # end of action
       end # end of command transform
 
       run!
     end # end run def
+
+    def self.help_the_noobie
+      say "To add LGTM text: #{CLI::CMD_TRANSFORM_SYNTAX}"
+      say "To fetch LGTM text: #{CLI::CMD_RANDOM_SYNTAX}"
+      say "More Help: lgtm_hd --help or visit #{LgtmHD::Configuration::MORE_HELP_URL} for more examples"
+      exit
+    end
 
     private
 
@@ -114,17 +120,34 @@ module LgtmHD
       end
     end
 
-    def self.check_uris(dest_dir, source_uri = nil)
-      raise "Output is invalid path or directory" unless File.exist?(dest_dir) && File.directory?(dest_dir)
-      if source_uri then return end
-      raise "Source is not proper URIs (URL or Path/to/file)" unless source_uri =~ URI::regexp || File.exist?(source_uri)
+    def self.format_question(text)
+      Rainbow(text).yellow.bright
     end
 
-    def self.format_destination_dir(dest_dir)
-      return Dir.pwd if dest_dir == '.'
-      dest_dir || LgtmHD::Configuration::OUTPUT_PATH_DEFAULT
+    def self.format_error(text)
+      Rainbow(text).red.bright
     end
-    def self.format_destination_file_prefix
+
+    def self.format_step(text)
+      Rainbow(text).yellow
+    end
+
+    def self.format_code(text)
+      Rainbow(text).black.bg(:silver)
+    end
+
+    def self.check_uris(dest_dir, source_uri = nil)
+      raise "Destination path for exporting image is invalid" unless File.exist?(dest_dir) && File.directory?(dest_dir)
+      if !source_uri then return end
+      raise "Source image is neither proper URL nor FILE" unless source_uri =~ URI::regexp || File.exist?(source_uri)
+    end
+
+    def self.destination_dir(dest_dir)
+      dest_dir ||= Dir.pwd
+      File.expand_path(dest_dir)
+    end
+
+    def self.destination_file_prefix
       LgtmHD::Configuration::OUTPUT_PREFIX + Time.now.strftime('%Y%m%d%H%M%S')
     end
 

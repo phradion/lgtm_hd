@@ -36,9 +36,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "codeclimate-test-reporter", "~> 1.0.0"
-  spec.add_runtime_dependency "open_uri_redirections"
   spec.add_runtime_dependency "commander", "4.4.3"
   spec.add_runtime_dependency "clipboard", "1.1.1"
+  spec.add_runtime_dependency "rainbow", "2.1.0"
   spec.add_runtime_dependency "os", "1.0.0"
   spec.add_runtime_dependency "mini_magick", "4.7.0"
 end
