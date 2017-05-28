@@ -5,8 +5,8 @@ module LgtmHD
   class LgtmDotIn
     API_STARTING_ENDPOINT     = "http://www.lgtm.in/g".freeze
     ACTUAL_IMAGE_URL_USE_SSL  = false
-    TRY_FETCHING_IMAGE_LIMIT  = 3
-    TRY_FETCHING_META_LIMIT   = 3
+    TRY_FETCHING_IMAGE_LIMIT  = 3 # I have hit lgtm.in with bad content 5 times in a row
+    TRY_FETCHING_META_LIMIT   = 3 # God know how many more redirect lgtm.in will use in the future
 
     def self.fetch_random_image(dest_path = nil, file_prefix = nil)
       # LGTM.in has so many broken images

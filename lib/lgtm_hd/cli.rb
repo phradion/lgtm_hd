@@ -3,7 +3,6 @@ require 'commander'
 require 'os'
 require 'clipboard'
 require 'uri'
-require 'pry'
 
 module LgtmHD
   class CLI
