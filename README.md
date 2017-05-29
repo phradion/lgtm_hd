@@ -20,7 +20,23 @@ Source             |  Happy Taeyeon!
 ## Installation
 
     $ gem install lgtm_hd
+    
+## Requirements
 
+This gem needs [imagemagick](https://www.imagemagick.org/) installed on local machine for image processing
+
+    # for Ubuntu, Debian
+    $ sudo apt-get install imagemagick libmagickwand-dev
+    
+    # for RHEL, CentOS, Fedora
+    $ yum install -y ImageMagick ImageMagick-devel
+    
+    # Mac with Brew
+    $ brew install imagemagick
+    # Mac with Port
+    $ sudo port install imagemagick
+    
+    
 ## Usage
 
 Add LGTM caption to image
@@ -37,7 +53,7 @@ Global Options:
     --dest DIR (or -d) is for changing output folder
     Default command is transform so you can just leave the command empty.
     
-## Examples
+## Examples 
 
 Add LGTM caption to image (with output)
 
