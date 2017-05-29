@@ -16,14 +16,17 @@ Source             |  Happy Taeyeon!
 :-------------------------:|:-------------------------:
 ![](./images/example_2_before.png?raw=true)  |  ![](./images/example_2_after.jpg?raw=true)
 
-
-## Installation
-
-    $ gem install lgtm_hd
-    
 ## Requirements
 
 This gem needs [imagemagick](https://www.imagemagick.org/) installed on local machine for image processing
+
+See if it has been installed already (should be able to see similar output like below)
+    
+    $ convert -version
+    Version: ImageMagick 6.9.2-6 Q16 x86_64 2015-11-15 http://www.imagemagick.org
+    Copyright: Copyright (C) 1999-2015 ImageMagick Studio LLC
+
+If not, follow below command to install it
 
     # for Ubuntu, Debian
     $ sudo apt-get install imagemagick libmagickwand-dev
@@ -35,7 +38,10 @@ This gem needs [imagemagick](https://www.imagemagick.org/) installed on local ma
     $ brew install imagemagick
     # Mac with Port
     $ sudo port install imagemagick
-    
+
+## Installation
+
+    $ gem install lgtm_hd
     
 ## Usage
 
