@@ -46,7 +46,7 @@ module LgtmHD
       #
       begin
         data = uri.open('Accept' => 'application/json', redirect: false, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE)
-        json = JSON.parse data.readlines.join("")
+        JSON.parse data.readlines.join("")
       rescue OpenURI::HTTPRedirect => redirect
         uri = redirect.uri # assigned from the "Location" response header
         retry if (limit -= 1) > 0
