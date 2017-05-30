@@ -11,10 +11,11 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Huy Dinh"]
   spec.email         = ["phradion@gmail.com"]
 
-  spec.summary       = %q{CLI tool for generating images from user input with LGTM text on it, or fetching images from LGTM.in based on user's query. Finally put the image to clipboard. Support direct image pasting to Github and Slack on MacOSX.}
+  spec.summary       = %q{CLI tool for generating images from user input with LGTM text on it, or fetching images from LGTM.in based on user's query. Finally put the image to clipboard. Support direct image pasting to Github and Slack on MacOSX. Live preview on terminal as well!}
   spec.description   = %q{This gem is command-line tool for fetching random image from lgtm.in.
     It also provide tool to apply LGTM text based on input file/url with smart text colors and positions.
-    It also support direct clipboard paste to github's comment box or Slack on MacOSX.}
+    It also support direct clipboard paste to github's comment box or Slack on MacOSX.
+    Live preview on terminal as well!}
   spec.homepage      = "http://github.com/phradion/lgtm_hd"
   spec.license       = "MIT"
 
