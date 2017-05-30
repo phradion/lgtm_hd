@@ -80,7 +80,7 @@ module LgtmHD
           source_uri = CLI.source_uri(source_uri)
           dest_dir = CLI.destination_dir(options.dest)
           check_uris(dest_dir, source_uri)
-          dest_file = File.join(dest_dir, CLI.destination_file_prefix + File.extname(source_uri))
+          dest_file = File.join(dest_dir, CLI.destination_file_prefix + CLI.extname(source_uri))
 
           # Do stuff with our LGTM meme
           say_step "Reading and inspecting source at #{source_uri}"
@@ -115,10 +115,10 @@ module LgtmHD
     end
 
     def show_preview(image_path, quality)
-      quality ||= 'low'
+      quality ||= 'high'
       quality.downcase!
       if quality.eql? "none" then return end
-      quality = 'low' unless quality.eql? 'high'
+      quality = 'high' unless quality.eql? 'low'
 
       say_step "\nImage Preview"
       CatpixMini::print_image image_path, {
@@ -176,6 +176,11 @@ module LgtmHD
 
     def self.source_uri(source_uri)
       source_uri =~ URI::regexp ? source_uri : File.expand_path(source_uri)
+    end
+
+    def self.extname(source_uri)
+      ext = File.extname(source_uri)
+      ext.gsub(/\?.*/, '')
     end
 
     def self.destination_dir(dest_dir)
