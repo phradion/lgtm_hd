@@ -3,7 +3,7 @@ require "mini_magick"
 module LgtmHD
   class MemeGenerator
     @@caption_positions = {caption_position_top: "north center", caption_position_bottom: "south center"}
-    
+
     # TODO make options list for this class
     # TODO pass BLOB data into this class instead of paths
     def initialize(input_image_uri:, output_image_uri:)
@@ -37,7 +37,6 @@ module LgtmHD
       image.write(@output_image_uri)
       yield @output_image_uri if block_given?
     end
-
 
   private
 

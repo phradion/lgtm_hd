@@ -7,7 +7,7 @@ module LgtmHD
                             "or fetching images from LGTM.in based on user's query.\n"\
                             "Finally put the image to clipboard.".freeze
     MORE_HELP_URL         = "https://github.com/phradion/lgtm_hd".freeze
-    
+
     # Output Image configurations
     OUTPUT_PREFIX         = "lgtm_hd_".freeze
     OUTPUT_MAX_WIDTH      = 500
@@ -16,7 +16,7 @@ module LgtmHD
 
     # Caption configurations
     FONT_PATH                   = "/fonts/impact.ttf".freeze
-    CAPTION_FONT_SIZE_DEFAULT   = 96
+    CAPTION_FONT_SIZE_DEFAULT   = 86
 
   end
 end

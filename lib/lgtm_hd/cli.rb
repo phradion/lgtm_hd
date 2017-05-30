@@ -2,23 +2,27 @@ require 'rubygems'
 require 'commander'
 require 'os'
 require 'clipboard'
+require 'catpix_mini'
 require 'uri'
 
 module LgtmHD
   class CLI
     include Commander::Methods
 
-    CMD_RANDOM_SYNTAX = 'lgtm_hd random [-i | --interactive] [-d | --dest DIR]'.freeze
-    CMD_TRANSFORM_SYNTAX = 'lgtm_hd <URI|FILE> [-i | --interactive] [-d | --dest <DIR>]'.freeze
+    CMD_RANDOM_SYNTAX = 'lgtm_hd random [options]'.freeze
+    CMD_TRANSFORM_SYNTAX = 'lgtm_hd <URI|FILE> [options]'.freeze
+    OPTIONS_SYNTAX = '[-i | --interactive] [-d | --destination <DIR>] [-p | --preview high|low|none]'
 
     def run
       program :name, LgtmHD::Configuration::PROGRAM_NAME
       program :version, LgtmHD::VERSION
       program :description, LgtmHD::Configuration::DESCRIPTION
+      program :help_formatter, Commander::HelpFormatter::TerminalCompact
 
       default_command :transform
       global_option '-i', '--interactive', 'Turn on interactive Mode. In case you forgot all these super complexive args and options' do say "-- LGTM HD Interactive Mode --" end
       global_option '-d', '--dest DIR', String, 'Directory to export the LGTM image to. Default value is user\'s current working directory'
+      global_option '-p', '--preview QUALITY', String, 'Quality of Image preview live on terminal at the end. Accepted values for QUALITY are [high, low, none]. Default value is high. Set to none for skipping'
 
       command :random do |c|
         c.syntax = CMD_RANDOM_SYNTAX
@@ -29,6 +33,7 @@ module LgtmHD
         c.action do |args, options|
           if options.interactive  # Interactive mode!
             options.dest ||= ask('Destination Directory (Enter to skip): ')
+            options.preview ||= agree('Preview image live on terminal? [y/N]')
           end
           dest_dir = CLI.destination_dir(options.dest)
           dest_file_prefix = CLI.destination_file_prefix
@@ -43,8 +48,12 @@ module LgtmHD
           copy_file_to_clipboard(dest_uri)
           say "\nOr you can copy the markdown format below provided by lgtm.in"
           say_code_block "#{image_markdown}"
+
+          show_preview dest_uri, options.preview
+
           say "\nIf the image does not have LGTM texts on it, run the cmd below"
           say_code_block "lgtm_hd #{dest_uri}"
+
         end
       end
 
@@ -61,6 +70,7 @@ module LgtmHD
           elsif options.interactive  # Interactive mode!
             source_uri ||= ask(' Source Image (URL or Path/to/file): ')
             options.dest ||= ask('Destination Directory (Enter to skip): ')
+            options.preview ||= agree('Preview image live on terminal? [y/N]')
           else
             # Since this is the default command so we will provide a little extra care for first-time user
             help_the_noobie
@@ -82,6 +92,7 @@ module LgtmHD
           meme_generator.export do |output|
             say_ok "Exported LGTM image to #{output}."
             copy_file_to_clipboard(dest_file)
+            show_preview dest_file, options.preview
           end # end of meme_generator.export block
         end # end of action
       end # end of command transform
@@ -90,16 +101,31 @@ module LgtmHD
     end # end run def
 
     def help_the_noobie
-      say "To add LGTM text:"
+      say_step "\nTo add LGTM text to image:"
       say_code_block CLI::CMD_TRANSFORM_SYNTAX
-      say "To fetch LGTM text:"
+      say_step "\nTo fetch random LGTM.IN image:"
       say_code_block CLI::CMD_RANDOM_SYNTAX
-      say "More Help:"
+      say_step "\nGlobal Options:"
+      say_code_block CLI::OPTIONS_SYNTAX
+      say_step "\nMore Help:"
       say_code_block "lgtm_hd --help"
-      say "\nVisit #{LgtmHD::Configuration::MORE_HELP_URL} for development purpose or more examples"
+      say_step "\nVisit #{LgtmHD::Configuration::MORE_HELP_URL} for development purpose or more examples\n"
       exit
     end
 
+    def show_preview(image_path, quality)
+      quality.downcase!
+      if quality.eql? "none" then return end
+      quality = 'low' unless quality.eql? 'high'
+
+      say_step "\nImage Preview"
+      CatpixMini::print_image image_path, {
+        :limit_y => 1.0,
+        :resolution => quality,
+        :center_x => false,
+        :center_y => true
+      }
+    end
 
     private
 
