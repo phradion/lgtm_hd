@@ -113,7 +113,7 @@ module LgtmHD
       exit
     end
 
-    def show_preview(image_path, quality)
+    def show_preview(image_path, quality = 'low')
       quality.downcase!
       if quality.eql? "none" then return end
       quality = 'low' unless quality.eql? 'high'
