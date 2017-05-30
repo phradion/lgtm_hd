@@ -33,7 +33,7 @@ module LgtmHD
         c.action do |args, options|
           if options.interactive  # Interactive mode!
             options.dest ||= ask('Destination Directory (Enter to skip): ')
-            options.preview ||= agree('Preview image live on terminal? [y/N]')
+            options.preview ||= ask('Image Preview Quality? [high|low|none] (Enter to skip)')
           end
           dest_dir = CLI.destination_dir(options.dest)
           dest_file_prefix = CLI.destination_file_prefix
@@ -45,12 +45,12 @@ module LgtmHD
           end
 
           say_ok "Exported image to #{dest_uri}"
-          copy_file_to_clipboard(dest_uri)
-          say "\nOr you can copy the markdown format below provided by lgtm.in"
-          say_code_block "#{image_markdown}"
 
           show_preview dest_uri, options.preview
 
+          copy_file_to_clipboard(dest_uri)
+          say "\nOr you can copy the markdown format below provided by lgtm.in"
+          say_code_block "#{image_markdown}"
           say "\nIf the image does not have LGTM texts on it, run the cmd below"
           say_code_block "lgtm_hd #{dest_uri}"
 
@@ -68,15 +68,16 @@ module LgtmHD
           if args.length >= 1
             source_uri = args[0]
           elsif options.interactive  # Interactive mode!
-            source_uri ||= ask(' Source Image (URL or Path/to/file): ')
+            source_uri ||= ask('Source Image (URL or Path/to/file): ')
             options.dest ||= ask('Destination Directory (Enter to skip): ')
-            options.preview ||= agree('Preview image live on terminal? [y/N]')
+            options.preview ||= ask('Image Preview Quality [high|low|none] (Enter to skip): ')
           else
             # Since this is the default command so we will provide a little extra care for first-time user
             help_the_noobie
           end
 
           # Validate the inputs
+          source_uri = CLI.source_uri(source_uri)
           dest_dir = CLI.destination_dir(options.dest)
           check_uris(dest_dir, source_uri)
           dest_file = File.join(dest_dir, CLI.destination_file_prefix + File.extname(source_uri))
@@ -91,8 +92,8 @@ module LgtmHD
           say_step "Exporting to file"
           meme_generator.export do |output|
             say_ok "Exported LGTM image to #{output}."
-            copy_file_to_clipboard(dest_file)
-            show_preview dest_file, options.preview
+            show_preview output, options.preview
+            copy_file_to_clipboard output
           end # end of meme_generator.export block
         end # end of action
       end # end of command transform
@@ -113,7 +114,8 @@ module LgtmHD
       exit
     end
 
-    def show_preview(image_path, quality = 'low')
+    def show_preview(image_path, quality)
+      quality ||= 'low'
       quality.downcase!
       if quality.eql? "none" then return end
       quality = 'low' unless quality.eql? 'high'
@@ -170,6 +172,10 @@ module LgtmHD
         say_error e.message
         exit
       end
+    end
+
+    def self.source_uri(source_uri)
+      source_uri =~ URI::regexp ? source_uri : File.expand_path(source_uri)
     end
 
     def self.destination_dir(dest_dir)

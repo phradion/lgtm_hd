@@ -16,7 +16,7 @@ module LgtmHD
 
     # Caption configurations
     FONT_PATH                   = "/fonts/impact.ttf".freeze
-    CAPTION_FONT_SIZE_DEFAULT   = 86
+    CAPTION_FONT_SIZE_DEFAULT   = 96
 
   end
 end
